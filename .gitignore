@@ -1,0 +1,9 @@
+# Build output
+*.o
+*.out
+*.exe
+simulador
+
+# Local files
+*.pdf
+*:Zone.Identifier
