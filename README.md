@@ -40,9 +40,10 @@ Nadie sube cambios directamente a `main`. El formato de las ramas es `tipo/perso
 Cada mensaje dice qué cambió y referencia el ticket:
 
 ```text
-feat: add integer input validation (#3)
-fix: reject negative altitude values (#4)
-docs: update AI usage log (#6)
+Problema:
+Solucion:
+Nombre y Apellido del integrante:
+Nombre del ticket:
 ```
 
 Todos los integrantes tienen que commitear durante todo el período de trabajo. La cátedra evalúa que los commits sean equitativos y no acepta un único commit final.
@@ -51,22 +52,13 @@ Todos los integrantes tienen que commitear durante todo el período de trabajo. 
 
 Un Pull Request se integra a `main` solo si cumple **todos** estos puntos.
 
-### Código
-
-- [ ] Compila con `make`, sin errores ni advertencias (`gcc -Wall -Wextra`).
-- [ ] Respeta la estructura de módulos de este README. No hay código monobloque.
-- [ ] Usa funciones con una responsabilidad clara y sin código duplicado.
-- [ ] Usa arreglos, punteros y `struct` donde corresponde.
-- [ ] Valida cada entrada de usuario por tipo y por rango. Letras en lugar de números no rompen el programa ni generan un bucle infinito.
-- [ ] Muestra mensajes de error claros y respeta las restricciones físicas del escenario.
-
 ### Proceso
 
 - [ ] La rama respeta el formato `tipo/persona-tema`.
 - [ ] El Pull Request referencia su ticket, por ejemplo `Closes #3`.
 - [ ] Otro integrante lo revisó y lo probó.
 - [ ] El uso de IA de ese cambio está en el [registro de IA](#registro-de-uso-de-inteligencia-artificial).
-- [ ] Quien sube el código lo entiende y puede defender cada línea en el coloquio.
+- [ ] Quien sube el código lo entiende y puede defender cada línea.
 
 ## Estructura del proyecto
 
