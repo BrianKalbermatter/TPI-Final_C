@@ -12,9 +12,9 @@ Simulador interactivo por consola, escrito en C, basado en una situación proble
 | Integrante | Usuario de GitHub |
 |---|---|
 | Brian Kalbermatter | [BrianKalbermatter](https://github.com/BrianKalbermatter) |
-| _a completar_ | _a completar_ |
-| _a completar_ | _a completar_ |
-| _a completar_ | _a completar_ |
+| Emiliano Elst | [Emiliano Elst](https://github.com/emilianoelst) |
+| _a completar_ | (https://github.com/EnzoSolis) |
+| _a completar_ | (https://github.com/EzXdlol)|
 
 ## Cómo trabajamos
 
