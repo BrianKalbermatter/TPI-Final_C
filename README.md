@@ -29,13 +29,11 @@ El trabajo se organiza en el tablero de GitHub Projects. Cada ticket cubre un á
 
 ### Ramas
 
-`main` está protegida: los cambios entran solo por Pull Request aprobado por Brian. Si subís commits después de la aprobación, hay que aprobar de nuevo. El formato de las ramas es `tipo/persona-tema`:
+`main` está protegida: los cambios entran solo por Pull Request aprobado por Brian. Si subís commits después de la aprobación, hay que aprobar de nuevo. El formato de las ramas es `problema/solucion/nombre-apellido/ticket`, con palabras clave cortas, en minúsculas y sin acentos ni espacios:
 
-| Tipo | Uso | Ejemplo |
-|---|---|---|
-| `feature` | Funcionalidad nueva | `feature/brian-validaciones` |
-| `fix` | Corrección de un error | `fix/brian-ingreso-enteros` |
-| `docs` | Documentación | `docs/brian-registro-ia` |
+```text
+sin-validacion/validar-enteros/brian-kalbermatter/validaciones
+```
 
 ### Commits
 
@@ -56,7 +54,7 @@ Un Pull Request se integra a `main` solo si cumple **todos** estos puntos.
 
 ### Proceso
 
-- [ ] La rama respeta el formato `tipo/persona-tema`.
+- [ ] La rama respeta el formato `problema/solucion/nombre-apellido/ticket`.
 - [ ] El Pull Request referencia su ticket, por ejemplo `Closes #3`.
 - [ ] Brian lo revisó y lo aprobó. Los Pull Requests de Brian los revisa otro integrante.
 - [ ] El uso de IA de ese cambio está en el [registro de IA](#registro-de-uso-de-inteligencia-artificial).
