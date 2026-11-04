@@ -24,12 +24,12 @@ El trabajo se organiza en el tablero de GitHub Projects. Cada ticket cubre un á
 2. Antes de escribir código, asignátelo y movelo a **In Progress**. Un ticket con responsable ya está tomado.
 3. Creá tu rama desde `main` actualizado.
 4. Trabajá con commits chicos y frecuentes.
-5. Abrí un Pull Request hacia `main` y pedí la revisión de otro integrante.
-6. Cuando se aprueba y se integra, el ticket pasa a **Done**.
+5. Abrí un Pull Request hacia `main`. GitHub le pide la revisión a Brian automáticamente.
+6. Cuando Brian lo aprueba y se integra, el ticket pasa a **Done**.
 
 ### Ramas
 
-Nadie sube cambios directamente a `main`. El formato de las ramas es `tipo/persona-tema`:
+`main` está protegida: los cambios entran solo por Pull Request aprobado por Brian. Si subís commits después de la aprobación, hay que aprobar de nuevo. El formato de las ramas es `tipo/persona-tema`:
 
 | Tipo | Uso | Ejemplo |
 |---|---|---|
@@ -58,7 +58,7 @@ Un Pull Request se integra a `main` solo si cumple **todos** estos puntos.
 
 - [ ] La rama respeta el formato `tipo/persona-tema`.
 - [ ] El Pull Request referencia su ticket, por ejemplo `Closes #3`.
-- [ ] Otro integrante lo revisó y lo probó.
+- [ ] Brian lo revisó y lo aprobó. Los Pull Requests de Brian los revisa otro integrante.
 - [ ] El uso de IA de ese cambio está en el [registro de IA](#registro-de-uso-de-inteligencia-artificial).
 - [ ] Quien sube el código lo entiende y puede defender cada línea.
 
