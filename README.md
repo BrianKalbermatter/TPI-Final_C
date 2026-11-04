@@ -1,6 +1,5 @@
 # TPI-Final_C: Simulador de Misiones Artemis
-Enlace para el Project:
-https://github.com/users/BrianKalbermatter/projects/2https://github.com/users/BrianKalbermatter/projects/2
+
 
 Trabajo Práctico Integrador Final de Algoritmos y Estructuras de Datos (UTN FRRe).
 Simulador interactivo por consola, escrito en C, basado en una situación problemática de la misión Artemis.
@@ -13,8 +12,8 @@ Simulador interactivo por consola, escrito en C, basado en una situación proble
 |---|---|
 | Brian Kalbermatter | [BrianKalbermatter](https://github.com/BrianKalbermatter) |
 | Emiliano Elst | [Emiliano Elst](https://github.com/emilianoelst) |
-| _a completar_ | (https://github.com/EnzoSolis) |
-| _a completar_ | (https://github.com/EzXdlol)|
+| Enzo Solis | [Enzo Solis](https://github.com/EnzoSolis) |
+| Jesus Miranda Arce | [Jesus Miranda Arce](https://github.com/EzXdlol)|
 
 ## Cómo trabajamos
 
