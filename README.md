@@ -183,6 +183,7 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 |---|---|---|---|---|
 | Brian Kalbermatter | Claude Code | Crear el repositorio, las reglas de trabajo y los tickets | Pedido de armar el tablero de tickets por áreas a partir del enunciado | Revisión de los requisitos contra el enunciado |
 | Enzo Solis | Gemini Flash (Antigravity) | Diseño de estructuras Situación 4, menú interactivo, validaciones y telemetría | Modelar structs, firmas físicas, menú con limpiar/volver y logs con voz de misión | Adaptación a C11, paso por referencia y compilación estricta con GCC (-Wall -Wextra) |
+| Brian Kalbermatter | Claude Code | Validar el ingreso de enteros en `validaciones.c` y `validaciones.h` | Consulta sobre cómo verificar si una entrada es un entero y cómo armar `leer_entero` | Se probó con letras, línea vacía, `12abc`, `3.5`, valores fuera de rango, 200 dígitos y fin de entrada; se revisó y se documentó el recorrido de la función |
 
 ## Entregables
 
