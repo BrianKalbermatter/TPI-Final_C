@@ -1,9 +1,91 @@
-# Build output
+# ==========================================
+# Compilacion y Binarios (Make / C / GCC)
+# ==========================================
 *.o
-*.out
-*.exe
-simulador
+*.obj
+*.d
+*.gch
+*.pch
 
-# Local files
-*.pdf
+# Bibliotecas y temporales de enlace
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.ilk
+*.exp
+*.pdb
+
+# Ejecutables y binarios
+*.exe
+*.out
+*.app
+simulador
+simulador.exe
+
+# Directorios de salida del proyecto
+out/
+bin/
+dist/
+
+# ==========================================
+# CMake
+# ==========================================
+build/
+build-*/
+cmake-build-*/
+CMakeFiles/
+CMakeScripts/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# ==========================================
+# Editores y Entornos de Desarrollo (IDEs)
+# ==========================================
+# Clangd
+.cache/
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio (MSVC)
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# CLion / JetBrains
+.idea/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim / Emacs / Nano
+*~
+*.swp
+*.swo
+*.swn
+*.bak
+.#*
+\#*#
+
+# ==========================================
+# Archivos del Sistema Operativo
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
 *:Zone.Identifier
+
+# ==========================================
+# Archivos Locales / Reportes
+# ==========================================
+*.pdf
