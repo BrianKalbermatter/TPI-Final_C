@@ -54,4 +54,16 @@ int leer_entero_rango(const char *mensaje, int min, int max);
  */
 double leer_real_rango(const char *mensaje, double min, double max);
 
+/**
+ * @brief Solicita un entero dentro de [min, max] (lectura de Brian Kalbermatter).
+ */
+int leer_entero(const char *mensaje, int min, int max);
+
+/**
+ * @brief Solicita una respuesta de confirmacion por consola (s/S/y/Y/1 o n/N/0).
+ * @param mensaje Texto de solicitud presentado al usuario.
+ * @return 1 si la respuesta es afirmativa, 0 si es negativa.
+ */
+int leer_confirmacion(const char *mensaje);
+
 #endif // VALIDACIONES_H

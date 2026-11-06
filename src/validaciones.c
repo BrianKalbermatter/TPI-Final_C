@@ -4,8 +4,84 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
+#include <limits.h>
 
 #define BUFFER_TAM 128
+
+// Ingreso seguro de enteros, flotantes y caracteres, y mensajes de advertencia
+// Pedir un entero y no dejar seguir hasta que escribas uno valido y dentro del rango.
+// El recorrido en cada vuelta es:
+/*
+1. Muestra la pregunta y lee la linea.
+2. Si no hay mas entrada, cierra el programa. Es el unico caso que no vuelve a preguntar.
+3. Si la linea es demasiado larga, tira el sobrante, avisa y pregunta de nuevo
+4. Si no es un entero, avisa y pregunta de nuevo.
+5. Si esta fuera del minimo y maximo, avisa y pregunta de nuevo
+6. Si es correcto, devuelve el numero y termina
+*/
+
+static
+int es_entero_valor(const char *texto, int *valor)
+{
+  char *fin;
+  long num;
+
+  errno = 0;
+  num = strtol(texto, &fin, 10);
+
+  if (fin == texto) // Esto dice que no habia ningun digito
+    return 0;
+  while (isspace((unsigned char)*fin)) fin++; // saltea el \n que deja fgets
+  if (*fin != '\0') return 0; // sobro texto: "12a"
+  if (errno == ERANGE || num < INT_MIN || num > INT_MAX) return 0;
+  *valor = (int)num;
+  return 1;  
+}
+
+static
+void descartar_linea(void)
+{
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF){
+    
+  }
+}
+
+int leer_entero(const char *mensaje, int min, int max)
+{
+  char linea[64];
+  int valor;
+
+  while (1) {
+    printf("%s", mensaje);
+    fflush(stdout); // No espera que se llene la memoria. Se dispara
+
+    if(fgets(linea, sizeof linea, stdin) == NULL){
+      printf("\nFin de la entrada. Saliendo del programa.\n");
+      exit(EXIT_FAILURE);
+    }
+
+    if(strchr(linea, '\n') == NULL && !feof(stdin)) {
+      descartar_linea();
+      printf("Error: la entrada es demasiado larga.\n");
+      continue;
+    }
+
+    if (!es_entero_valor(linea, &valor)) {
+      printf("Error: ingrese un numero entero.\n");
+      continue;
+    }
+
+    if (valor < min || valor > max) {
+      printf("Error: el valor debe estar entre %d y %d.\n", min, max);
+      continue;
+    }
+
+
+    return valor;
+  }
+}
 
 static void recortar_espacios(char *dest, const char *orig, size_t max_tam) {
   ASSERT(dest != NULL, "dest no puede ser nulo en recortar_espacios");
@@ -53,6 +129,11 @@ int es_entero(const char *const texto) {
       return 0;
     }
   }
+
+  // Un numero que no entra en int tampoco es un entero valido.
+  errno = 0;
+  long numero = strtol(limpio, NULL, 10);
+  if (errno == ERANGE || numero < INT_MIN || numero > INT_MAX) return 0;
 
   return 1;
 }
@@ -131,7 +212,13 @@ int leer_entero_rango(const char *mensaje, int min, int max) {
 
     if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
       LOG_WARNING("[CONSOLA] Señal de fin de entrada (EOF) o fallo en buffer estándar");
-      clearerr(stdin);
+      printf("\nFin de la entrada. Saliendo del programa.\n");
+      exit(EXIT_FAILURE);
+    }
+
+    if (strchr(buffer, '\n') == NULL && !feof(stdin)) {
+      descartar_linea();
+      printf("[!] Error: La entrada es demasiado larga. Intente nuevamente.\n");
       continue;
     }
 
@@ -169,7 +256,13 @@ double leer_real_rango(const char *mensaje, double min, double max) {
 
     if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
       LOG_WARNING("[CONSOLA] Señal de fin de entrada (EOF) o fallo en buffer estándar");
-      clearerr(stdin);
+      printf("\nFin de la entrada. Saliendo del programa.\n");
+      exit(EXIT_FAILURE);
+    }
+
+    if (strchr(buffer, '\n') == NULL && !feof(stdin)) {
+      descartar_linea();
+      printf("[!] Error: La entrada es demasiado larga. Intente nuevamente.\n");
       continue;
     }
 
@@ -194,4 +287,35 @@ double leer_real_rango(const char *mensaje, double min, double max) {
   } while (!valido);
 
   return valor;
+}
+
+int leer_confirmacion(const char *mensaje) {
+  ASSERT(mensaje != NULL, "mensaje no puede ser nulo en leer_confirmacion");
+
+  char buffer[BUFFER_TAM];
+  int respuesta = -1;
+
+  do {
+    printf("%s", mensaje);
+    fflush(stdout);
+
+    if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+      LOG_WARNING("[CONSOLA] Señal de fin de entrada (EOF) o fallo en buffer estándar");
+      printf("\nFin de la entrada. Saliendo del programa.\n");
+      exit(EXIT_FAILURE);
+    }
+
+    if (strchr(buffer, '\n') == NULL && !feof(stdin)) {
+      descartar_linea();
+      printf("[!] Error: La entrada es demasiado larga. Intente nuevamente.\n");
+      continue;
+    }
+
+    respuesta = es_confirmacion(buffer);
+    if (respuesta == -1) {
+      printf("[!] Error: Entrada invalida. Por favor responda S o N.\n");
+    }
+  } while (respuesta == -1);
+
+  return respuesta;
 }
