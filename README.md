@@ -1,96 +1,95 @@
-# TPI-Final_C: Simulador de Misiones Artemis
+# Simulador de Misiones Artemis
 
+Trabajo Práctico Integrador en C — UTN FRRe.
 
-Trabajo Práctico Integrador Final de Algoritmos y Estructuras de Datos (UTN FRRe).
-Simulador interactivo por consola, escrito en C, basado en una situación problemática de la misión Artemis.
+**Escenario:** Reingreso Atmosférico, Frenado Aerodinámico y Amerizaje (Trabajo, Energía e Impacto).
 
-## Integrantes y comisión
+## Archivos
 
-**Comisión:** _a completar_
-
-| Integrante | Usuario de GitHub |
+| Archivo | Contenido |
 |---|---|
-| Brian Kalbermatter | [BrianKalbermatter](https://github.com/BrianKalbermatter) |
-| Emiliano Elst | [Emiliano Elst](https://github.com/emilianoelst) |
-| Enzo Solis | [Enzo Solis](https://github.com/EnzoSolis) |
-| Jesus Miranda Arce | [Jesus Miranda Arce](https://github.com/EzXdlol)|
+| `simulador.h` | Constantes físicas, estructura `ResultadoArtemis` y prototipos |
+| `simulador.c` | Cálculos físicos, validaciones y mensajes de error |
+| `main.c` | Ejemplo de uso con los datos del enunciado |
 
-## Cómo trabajamos
+Lenguaje: C únicamente (ANSI C / C99).
 
-El trabajo se organiza en el tablero de GitHub Projects. Cada ticket cubre un área completa del proyecto.
+## Compilar y ejecutar
 
-1. Elegí un ticket libre de la columna **Todo**.
-2. Antes de escribir código, asignátelo y movelo a **In Progress**. Un ticket con responsable ya está tomado.
-3. Creá tu rama desde `main` actualizado.
-4. Trabajá con commits chicos y frecuentes.
-5. Abrí un Pull Request hacia `main`. GitHub le pide la revisión a Brian automáticamente.
-6. Cuando Brian lo aprueba y se integra, el ticket pasa a **Done**.
-
-### Ramas
-
-`main` está protegida: los cambios entran solo por Pull Request aprobado por Brian. Si subís commits después de la aprobación, hay que aprobar de nuevo. El formato de las ramas es `problema/solucion/nombre-apellido/ticket`, con palabras clave cortas, en minúsculas y sin acentos ni espacios:
-
-```text
-sin-validacion/validar-enteros/brian-kalbermatter/validaciones
+```
+gcc -std=c99 -Wall -Wextra -pedantic main.c simulador.c -o artemis -lm
+./artemis
 ```
 
-### Commits
+## Descripción del escenario
 
-Cada mensaje dice qué cambió y referencia el ticket:
+Tras completar el sobrevuelo lunar, el módulo de tripulación Orion reingresa a la atmósfera terrestre. El escudo térmico y la resistencia aerodinámica reducen su velocidad, y luego ameriza en el Océano Pacífico.
 
-```text
-Problema:
-Solucion:
-Nombre y Apellido del integrante:
-Nombre del ticket:
-```
+| Dato | Símbolo | Valor |
+|---|---|---|
+| Masa | m | 10400 kg |
+| Velocidad inicial | vi | 11000 m/s |
+| Altitud inicial | hi | 120000 m |
+| Velocidad final | vf | 25 m/s |
+| Altitud final | hf | 2500 m |
+| Velocidad de impacto | vImpacto | 8 m/s |
+| Distancia de frenado en el agua | d | 1,5 m |
+| Tiempo de desaceleración atmosférica | t | 400 s |
+| Ventana segura de reingreso | γ | 5,5° ≤ γ ≤ 7,0° |
 
-Todos los integrantes tienen que commitear durante todo el período de trabajo. La cátedra evalúa que los commits sean equitativos y no acepta un único commit final.
+Constante usada: g = 9,81 m/s² (definida en `simulador.h`, considerada constante durante todo el reingreso).
 
-## Requisitos obligatorios para subir código
+## Reglas del escenario
 
-Un Pull Request se integra a `main` solo si cumple **todos** estos puntos.
+### Pregunta 1 — Trabajo de rozamiento
+`double calcularTrabajoRozamiento(masa, vi, vf, hi, hf)`
 
-### Proceso
+Teorema trabajo-energía: `Wroz + Wg = ΔEc`, con `ΔEc = ½·m·(vf² − vi²)` y `Wg = m·g·(hi − hf)`. Se despeja `Wroz = ΔEc − Wg`.
 
-- [ ] La rama respeta el formato `problema/solucion/nombre-apellido/ticket`.
-- [ ] El Pull Request referencia su ticket, por ejemplo `Closes #3`.
-- [ ] Brian lo revisó y lo aprobó. Los Pull Requests de Brian los revisa otro integrante.
-- [ ] El uso de IA de ese cambio está en el [registro de IA](#registro-de-uso-de-inteligencia-artificial).
-- [ ] Quien sube el código lo entiende y puede defender cada línea.
+Se valida: `masa > 0`, `hi > hf`, velocidades `>= 0`.
 
-## Estructura del proyecto
+### Pregunta 2 — Desaceleración media y factor g
+`double calcularDesaceleracionMedia(vi, vf, tiempo)` y `double calcularFactorG(aceleracion)`
 
-| Archivo | Responsabilidad |
+`a = (vf − vi) / t` y `gCarga = |a| / g`.
+
+Se valida: `tiempo > 0`.
+
+### Pregunta 3 — Fuerza de amerizaje
+`double calcularFuerzaAmerizaje(masa, velocidadImpacto, distanciaFrenado)` y `double calcularMultiploPeso(fuerza, masa)`
+
+Trabajo-energía: `Fprom · d = ½·m·v²`, entonces `Fprom = (½·m·v²) / d`. El múltiplo del peso es `Fprom / (m·g)`.
+
+Se valida: `masa > 0`, `velocidadImpacto >= 0`, `distanciaFrenado > 0`.
+
+### Pregunta 4 — Ángulo de reingreso
+`void analizarAnguloReingreso(double gamma)`
+
+| Condición | Resultado mostrado |
 |---|---|
-| `main.c` | Función `main()`, menú principal e inicio del flujo del programa |
-| `simulador.h` | Constantes, `struct`, `typedef` y prototipos públicos |
-| `simulador.c` | Algoritmos de simulación, estado del juego, cálculos físicos y lógica de negocio |
-| `validaciones.c` / `validaciones.h` | Ingreso seguro de enteros, flotantes y caracteres, y mensajes de advertencia |
-| `Makefile` | Compilación del proyecto |
+| `γ > 7,0` | desaceleración excesiva, calentamiento extremo, riesgo estructural, peligro para la tripulación |
+| `γ < 5,5` | rebote atmosférico, pérdida de frenado, posible retorno al espacio, desviación de la zona de amerizaje |
+| `5,5 ≤ γ ≤ 7,0` | trayectoria segura |
 
-## Escenario Artemis
+### Estructura y punteros
+`resolverEscenarioArtemis(ResultadoArtemis *resultado, ...)` completa mediante un puntero la estructura `ResultadoArtemis` (trabajoRozamiento, desaceleracion, factorG, fuerzaAmerizaje, multiploPeso).
 
-_A completar cuando la cátedra asigne el escenario: descripción detallada y reglas del juego._
+### Casos sin solución física
+Cuando un dato es físicamente imposible, la función informa el error por `stderr` y devuelve `NAN` en lugar de calcular. El resultado se verifica con `isnan()`. Una entrada inválida deja también en `NAN` los resultados que dependen de ella.
 
-## Funcionamiento
+Validaciones agregadas, que no están en la consigna original:
+- `hf >= 0`.
+- `Wroz <= 0`: el rozamiento no puede entregar energía a la nave.
+- `0 < γ <= 90°` en `analizarAnguloReingreso`.
 
-_A completar: menú principal, ciclo de simulación por turnos o eventos, y reporte final de desempeño._
+## Resultados con los datos del enunciado
 
-## Compilación y ejecución
+Coinciden con la resolución hecha a mano (`main.c` los compara y muestra OK):
 
-_A completar cuando esté el `Makefile`._
-
-## Registro de uso de Inteligencia Artificial
-
-Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
-
-| Integrante | Herramienta | Tarea | Prompt o consulta | Cómo se validó o adaptó |
-|---|---|---|---|---|
-| Brian Kalbermatter | Claude Code | Crear el repositorio, las reglas de trabajo y los tickets | Pedido de armar el tablero de tickets por áreas a partir del enunciado | Revisión de los requisitos contra el enunciado |
-
-## Entregables
-
-- [ ] Repositorio público con el código modularizado, el `Makefile` y el historial de cambios.
-- [ ] README completo: integrantes y comisión, escenario y reglas, funcionamiento, compilación y ejecución, y registro de IA.
-- [ ] Video de hasta 5 minutos con todos los integrantes, usando su voz real y apareciendo en cámara. Incluye presentación, arquitectura, un caso exitoso y las validaciones ante entradas erróneas. No se permite usar IA para generar voces, avatares ni personas.
+| Magnitud | Resultado |
+|---|---|
+| Wroz | −6,41185 · 10¹¹ J (ΔEc = −6,29197 · 10¹¹ J; Wg = 1,19878 · 10¹⁰ J) |
+| a | −27,4375 m/s² |
+| Factor g | 2,797 g |
+| Fprom | 221 866,67 N |
+| Múltiplo del peso | 2,175 veces |
