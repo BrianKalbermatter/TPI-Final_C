@@ -89,6 +89,7 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 | Integrante | Herramienta | Tarea | Prompt o consulta | Cómo se validó o adaptó |
 |---|---|---|---|---|
 | Brian Kalbermatter | Claude Code | Crear el repositorio, las reglas de trabajo y los tickets | Pedido de armar el tablero de tickets por áreas a partir del enunciado | Revisión de los requisitos contra el enunciado |
+| Ciro Villalba | Claude Code | Controlar y editar el video | pedido de corregir la descontinuidád brusca en algunas partes del video | revisión del video |
 
 ## Entregables
 
