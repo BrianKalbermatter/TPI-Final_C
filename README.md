@@ -14,6 +14,7 @@ Simulador interactivo por consola, escrito en C, basado en una situación proble
 | Emiliano Elst | [Emiliano Elst](https://github.com/emilianoelst) |
 | Enzo Solis | [Enzo Solis](https://github.com/EnzoSolis) |
 | Jesus Miranda Arce | [Jesus Miranda Arce](https://github.com/EzXdlol)|
+| Ciro Alejandro Villalba | [Ciro Alejandro Villalba](https://github.com/Gravitated-ribbit-ribbit) |
 
 ## Cómo trabajamos
 

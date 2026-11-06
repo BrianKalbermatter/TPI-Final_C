@@ -595,12 +595,13 @@ void simulador_mostrar_integrantes(void) {
   printf(" Asignatura:  Algoritmos y Estructuras de Datos\n");
   printf(" Carrera:     Ingenieria en Sistemas de Informacion\n");
   printf(" Proyecto:    Simulador de Misiones Artemis - Situacion 4\n\n");
-  printf(" ┌─────────────────────────┬─────────────────────────┐\n");
-  printf(" │ Integrante              │ Usuario GitHub          │\n");
-  printf(" ├─────────────────────────┼─────────────────────────┤\n");
-  printf(" │ Brian Kalbermatter      │ @BrianKalbermatter      │\n");
-  printf(" │ Emiliano Elst           │ @emilianoelst           │\n");
-  printf(" │ Enzo Solis              │ @EnzoSolis              │\n");
-  printf(" │ Ezequiel (EzXdlol)      │ @EzXdlol                │\n");
-  printf(" └─────────────────────────┴─────────────────────────┘\n");
+  printf(" ┌─────────────────────────┬───────────────────────────┐\n");
+  printf(" │ Integrante              │ Usuario GitHub            │\n");
+  printf(" ├─────────────────────────┼───────────────────────────┤\n");
+  printf(" │ Brian Kalbermatter      │ @BrianKalbermatter        │\n");
+  printf(" │ Emiliano Elst           │ @emilianoelst             │\n");
+  printf(" │ Enzo Solis              │ @EnzoSolis                │\n");
+  printf(" │ Ezequiel (EzXdlol)      │ @EzXdlol                  │\n");
+  printf(" │ Ciro Alejandro Villalba │ @Gravitated-ribbit-ribbit │\n");
+  printf(" └─────────────────────────┴───────────────────────────┘\n");
 }
