@@ -88,6 +88,8 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 | Integrante | Herramienta | Tarea | Prompt o consulta | Cómo se validó o adaptó |
 |---|---|---|---|---|
 | Brian Kalbermatter | Claude Code | Crear el repositorio, las reglas de trabajo y los tickets | Pedido de armar el tablero de tickets por áreas a partir del enunciado | Revisión de los requisitos contra el enunciado |
+| Emiliano Elst | Gemini | Ciclo de simulación por turnos, historial en arreglos y reporte final (Ticket #5) | Solicitud de diseño de estado de la misión, bucle de turnos con condiciones de éxito/fracaso del Escenario 4 y reporte de desempeño | Verificación contra las fórmulas físicas del reingreso atmosférico y adaptación al código integrado del equipo |
+
 
 ## Entregables
 
