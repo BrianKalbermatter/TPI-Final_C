@@ -169,7 +169,7 @@ static inline void activar_utf8(void) {
 static inline void activar_utf8(void) { (void)0; }
 #endif // _WIN32
 
-// -- Limpiar pantalla
+// -- Control de interfaz y pantalla
 
 /**
  * @brief Limpia la pantalla de la terminal o consola.
@@ -179,5 +179,16 @@ static inline void activar_utf8(void) { (void)0; }
  *          - Otros sistemas: combinación de secuencias ANSI y saltos de línea como respaldo.
  */
 void limpiar_consola(void);
+
+/**
+ * @brief Alias estándar para limpiar la pantalla de la consola.
+ */
+void limpiar_pantalla(void);
+
+/**
+ * @brief Pausa la ejecución hasta que el usuario presione ENTER y luego limpia la pantalla.
+ * @details Facilita la navegación en menús de consola con opción de regreso al menú anterior.
+ */
+void volver_atras(void);
 
 #endif // UTILIDADES_H

@@ -143,3 +143,18 @@ void limpiar_consola(void) {
   fflush(stdout);
 }
 #endif // _WIN32
+
+void limpiar_pantalla(void) {
+  limpiar_consola();
+}
+
+void volver_atras(void) {
+  printf("\nPresione ENTER para volver atras...");
+  fflush(stdout);
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF) {
+    // vaciar hasta salto de linea
+  }
+  limpiar_pantalla();
+}
+
