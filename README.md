@@ -14,6 +14,7 @@ Simulador interactivo por consola, escrito en C, basado en una situación proble
 | Emiliano Elst | [Emiliano Elst](https://github.com/emilianoelst) |
 | Enzo Solis | [Enzo Solis](https://github.com/EnzoSolis) |
 | Jesus Miranda Arce | [Jesus Miranda Arce](https://github.com/EzXdlol)|
+| Villalba Alejandro Ciro | [Villalba Alejandro Ciro](https://github.com/Gravitated-ribbit-ribbit)|
 
 ## Cómo trabajamos
 
@@ -49,7 +50,7 @@ Todos los integrantes tienen que commitear durante todo el período de trabajo. 
 
 ## Requisitos obligatorios para subir código
 
-Un Pull Request se integra a `main` solo si cumple **todos** estos puntos.
+Un Pull Request se integrará a `main` solo si cumple **todos** estos puntos.
 
 ### Proceso
 
@@ -91,6 +92,6 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 
 ## Entregables
 
-- [ ] Repositorio público con el código modularizado, el `Makefile` y el historial de cambios.
+- [ ] Repositorio público con el código modularizado, el `Makefile` junto con el historial de cambios.
 - [ ] README completo: integrantes y comisión, escenario y reglas, funcionamiento, compilación y ejecución, y registro de IA.
 - [ ] Video de hasta 5 minutos con todos los integrantes, usando su voz real y apareciendo en cámara. Incluye presentación, arquitectura, un caso exitoso y las validaciones ante entradas erróneas. No se permite usar IA para generar voces, avatares ni personas.
