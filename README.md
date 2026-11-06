@@ -186,7 +186,6 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 | Enzo Solis | Gemini Flash (Antigravity) | Diseño de estructuras Situación 4, menú interactivo, validaciones y telemetría | Modelar structs, firmas físicas, menú con limpiar/volver y logs con voz de misión | Adaptación a C11, paso por referencia y compilación estricta con GCC (-Wall -Wextra) |
 | Brian Kalbermatter | Claude Code | Validar el ingreso de enteros en `validaciones.c` y `validaciones.h` | Consulta sobre cómo verificar si una entrada es un entero y cómo armar `leer_entero` | Se probó con letras, línea vacía, `12abc`, `3.5`, valores fuera de rango, 200 dígitos y fin de entrada; se revisó y se documentó el recorrido de la función |
 | Brian Kalbermatter | Claude Code | Unir las ramas del equipo en una rama de integración, completar el ciclo de juego, el modo teórico y el reporte | Pedido de unificar todas las ramas según la consigna sin quitar lo escrito por el equipo | Se jugaron todos los finales, se probaron entradas erróneas y fin de entrada, y se compiló con `-Wall -Wextra` en Debug y Release |
-| Emiliano Elst | Gemini | Ciclo de simulación por turnos, historial en arreglos y reporte final (Ticket #5) | Solicitud de diseño de estado de la misión, bucle de turnos con condiciones de éxito/fracaso del Escenario 4 y reporte de desempeño | Verificación contra las fórmulas físicas del reingreso atmosférico y adaptación al código integrado del equipo |
 
 ## Entregables
 
