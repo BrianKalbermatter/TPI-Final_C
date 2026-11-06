@@ -10,16 +10,8 @@ Trabajo Práctico Integrador en C — UTN FRRe.
 |---|---|
 | `simulador.h` | Constantes físicas, estructura `ResultadoArtemis` y prototipos |
 | `simulador.c` | Cálculos físicos, validaciones y mensajes de error |
-| `main.c` | Ejemplo de uso con los datos del enunciado |
 
 Lenguaje: C únicamente (ANSI C / C99).
-
-## Compilar y ejecutar
-
-```
-gcc -std=c99 -Wall -Wextra -pedantic main.c simulador.c -o artemis -lm
-./artemis
-```
 
 ## Descripción del escenario
 
@@ -84,7 +76,7 @@ Validaciones agregadas, que no están en la consigna original:
 
 ## Resultados con los datos del enunciado
 
-Coinciden con la resolución hecha a mano (`main.c` los compara y muestra OK):
+Ingresando `10400 11000 25 120000 2500 400 8 1.5 6` (masa, vi, vf, hi, hf, t, vImpacto, d, γ), el programa da estos valores, que coinciden con la resolución hecha a mano:
 
 | Magnitud | Resultado |
 |---|---|
