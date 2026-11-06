@@ -3,9 +3,26 @@
  * @brief Definiciones, constantes, estructuras y firmas del Simulador de Misión Artemis (Situación 4).
  * @date 2026-11-06
  */
+/*
+ * simulador.h
+ * Simulador de Misiones Artemis - Trabajo Practico Integrador (UTN FRRe)
+ * Escenario: Reingreso Atmosferico, Frenado Aerodinamico y Amerizaje
+ *            (Trabajo, Energia e Impacto)
+ *
+ * Contiene: constantes fisicas, la estructura de resultados y los
+ * prototipos de todas las funciones. Compatible con ANSI C / C99.
+ */
 #ifndef SIMULADOR_H
 #define SIMULADOR_H
 
+// Constantes del Escenario 4: Reingreso Atmosferico y Amerizaje
+// ALTITUD_REINGRESO_M: 120 km en metros
+// VELOCIDAD_REINGRESO_MS: 11 km/s en m/s
+// ALTITUD_PARACAIDAS_M: 2.5 km en metros
+// GRAVEDAD_TIERRA: m/s^2
+
+/* Aceleracion de la gravedad terrestre [m/s^2]. Se la considera
+ * constante durante todo el reingreso (simplificacion del enunciado). */
 // -- Parámetros físicos constantes de la Situación 4 --
 #define MASA_ORION_KG               10400.0   /**< Masa del módulo de tripulación Orion (kg). */
 #define GRAVEDAD_TIERRA             9.80      /**< Aceleración gravitatoria g (m/s²). */
@@ -19,6 +36,27 @@
 #define ANGULO_REINGRESO_MIN        5.5       /**< Límite inferior seguro de ventana de entrada (°). */
 #define ANGULO_REINGRESO_MAX        7.0       /**< Límite superior seguro de ventana de entrada (°). */
 #define MAX_HISTORIAL_TELEMETRIA    100       /**< Capacidad máxima de muestras de telemetría. */
+#define TAM_EVENTO                  80        /**< Tamaño de la descripción de un turno. */
+
+// -- Parámetros de la mecánica por turnos --
+#define DT_TURNO_S                  60.0      /**< Duración de cada turno de juego (s). */
+#define ALTITUD_FIN_ENTRADA_M       60000.0   /**< Fin de la fase de entrada atmosférica (m). */
+#define ALTITUD_TRANSICION_M        40000.0   /**< Debajo de esta altitud el descenso por turno es menor (m). */
+#define ALTITUD_FRENADO_M           10000.0   /**< Debajo de esta altitud se decide el paracaídas (m). */
+#define DESCENSO_ALTO_M             55000.0   /**< Descenso por turno sobre la altitud de transición (m). */
+#define DESCENSO_BAJO_M             37500.0   /**< Descenso por turno bajo la altitud de transición (m). */
+#define DESCENSO_EMPINADO_M         45000.0   /**< Descenso por turno con gamma excesivo (m). */
+#define FRENADO_BASE                0.22      /**< Fracción de velocidad conservada con gamma mínimo. */
+#define FRENADO_POR_GRADO           0.05      /**< Fracción adicional conservada por grado de gamma. */
+#define FRENADO_EMPINADO            0.20      /**< Fracción de velocidad conservada con gamma excesivo. */
+#define DANO_ESCUDO_NOMINAL         12.0      /**< Daño de escudo por turno nominal (%). */
+#define DANO_ESCUDO_EMPINADO        65.0      /**< Daño de escudo por turno con gamma excesivo (%). */
+#define VELOCIDAD_MAX_PARACAIDAS_MS 120.0     /**< Rapidez máxima para abrir paracaídas (m/s). */
+#define CARGA_G_MAXIMA              15.0      /**< Carga máxima soportable por la tripulación (g). */
+
+/* Ventana segura del angulo de reingreso [grados] */
+#define GAMMA_MIN ANGULO_REINGRESO_MIN
+#define GAMMA_MAX ANGULO_REINGRESO_MAX
 
 /**
  * @brief Fases del descenso y reingreso atmosférico.
@@ -31,6 +69,7 @@ typedef enum {
   FASE_FINALIZADA
 } FaseVuelo;
 
+// Estados posibles de la mision
 /**
  * @brief Estados finales de la misión.
  */
@@ -53,6 +92,7 @@ typedef enum {
   ANGULO_MUY_EMPINADO_DESTRUCCION
 } EstadoAngulo;
 
+// Estructura para cada posicion del arreglo de historial de turnos
 /**
  * @brief Muestra individual de telemetría de vuelo.
  */
@@ -63,8 +103,12 @@ typedef struct {
   double aceleracion_g;       /**< Aceleración experimentada en múltiplos de g. */
   double energia_mecanica;    /**< Energía mecánica del sistema (J). */
   FaseVuelo fase;             /**< Fase del vuelo correspondiente. */
+  double angulo_gamma;        /**< Ángulo de guiado usado en el turno (°). */
+  double trabajo_rozamiento;  /**< Trabajo de rozamiento del turno (J). */
+  char evento[TAM_EVENTO];    /**< Descripción de lo ocurrido en el turno. */
 } PuntoTelemetria;
 
+// Estructura principal del estado de la mision
 /**
  * @brief Estado integral de la cápsula Orion y de la simulación.
  */
@@ -96,6 +140,35 @@ typedef struct {
   ResultadoMision resultado;
   char causa_fallo[128];
 } MisionArtemis;
+
+/**
+ * @brief Datos de entrada de las preguntas analíticas del escenario.
+ */
+typedef struct {
+  double masa;               /**< Masa de la nave (kg). */
+  double vi;                 /**< Rapidez inicial (m/s). */
+  double vf;                 /**< Rapidez final (m/s). */
+  double hi;                 /**< Altitud inicial (m). */
+  double hf;                 /**< Altitud final (m). */
+  double delta_t;            /**< Duración de la desaceleración (s). */
+  double v_impacto;          /**< Rapidez de impacto contra el agua (m/s). */
+  double distancia_frenado;  /**< Distancia de frenado en el agua (m). */
+  double gamma;              /**< Ángulo de reingreso (°). */
+} DatosEscenario;
+
+/* ------------------------------------------------------------------ */
+/* Estructura de resultados                                            */
+/* ------------------------------------------------------------------ */
+typedef struct {
+    double trabajoRozamiento;  /* Wroz  [J]  (negativo: energia disipada) */
+    double desaceleracion;     /* a     [m/s^2] (negativa: frena)         */
+    double factorG;            /* |a|/g [adimensional]                    */
+    double fuerzaAmerizaje;    /* Fprom [N]                               */
+    double multiploPeso;       /* Fprom / (m g) [adimensional]            */
+} ResultadoArtemis;
+
+/* Marca de resultado invalido: se usa NAN (C99, <math.h>) cuando una
+ * funcion detecta un caso fisicamente imposible. Verificar con isnan(). */
 
 // ============================================================================
 // FIRMAS DE FUNCIONES PARA EL CÁLCULO DE FÍSICAS (Situación 4)
@@ -152,6 +225,20 @@ double calcular_multiplo_peso(double fuerza, double masa);
  */
 EstadoAngulo evaluar_angulo_reingreso(double gamma);
 
+/* ------------------------------------------------------------------ */
+/* Pregunta 4: analisis del angulo de reingreso                        */
+/* ------------------------------------------------------------------ */
+void analizarAnguloReingreso(double gamma);
+
+/* ------------------------------------------------------------------ */
+/* Funcion principal: completa la estructura mediante un puntero       */
+/* ------------------------------------------------------------------ */
+void resolverEscenarioArtemis(ResultadoArtemis *resultado,
+                              double masa, double vi, double vf,
+                              double hi, double hf, double tiempo,
+                              double velocidadImpacto,
+                              double distanciaFrenado);
+
 // ============================================================================
 // FIRMAS DE CONTROL DEL SIMULADOR Y MODOS DE EJECUCIÓN
 // ============================================================================
@@ -161,6 +248,11 @@ EstadoAngulo evaluar_angulo_reingreso(double gamma);
  * @param mision Puntero a la estructura de estado.
  */
 void simulador_inicializar(MisionArtemis *mision);
+
+// Prototipos publicos del simulador (Ticket #5)
+void actualizar_estado_turno(MisionArtemis *mision, double angulo, int accion_paracaidas, double dt);
+void guardar_turno_historial(MisionArtemis *mision, double angulo, double carga_g,
+                             double w_roz, double dt, const char *evento);
 
 /**
  * @brief Ejecuta el modo de juego interactivo por fases y decisiones.

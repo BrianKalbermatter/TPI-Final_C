@@ -184,6 +184,7 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 | Brian Kalbermatter | Claude Code | Crear el repositorio, las reglas de trabajo y los tickets | Pedido de armar el tablero de tickets por áreas a partir del enunciado | Revisión de los requisitos contra el enunciado |
 | Enzo Solis | Gemini Flash (Antigravity) | Diseño de estructuras Situación 4, menú interactivo, validaciones y telemetría | Modelar structs, firmas físicas, menú con limpiar/volver y logs con voz de misión | Adaptación a C11, paso por referencia y compilación estricta con GCC (-Wall -Wextra) |
 | Brian Kalbermatter | Claude Code | Validar el ingreso de enteros en `validaciones.c` y `validaciones.h` | Consulta sobre cómo verificar si una entrada es un entero y cómo armar `leer_entero` | Se probó con letras, línea vacía, `12abc`, `3.5`, valores fuera de rango, 200 dígitos y fin de entrada; se revisó y se documentó el recorrido de la función |
+| Brian Kalbermatter | Claude Code | Unir las ramas del equipo en una rama de integración, completar el ciclo de juego, el modo teórico y el reporte | Pedido de unificar todas las ramas según la consigna sin quitar lo escrito por el equipo | Se jugaron todos los finales, se probaron entradas erróneas y fin de entrada, y se compiló con `-Wall -Wextra` en Debug y Release |
 
 ## Entregables
 
