@@ -1,0 +1,131 @@
+==============================================================================
+DIAGNOSTICO DEL FUNCIONAMIENTO
+Simulador de Misiones Artemis - Situacion 4
+Reingreso Atmosferico, Frenado Aerodinamico y Amerizaje
+Catedra de Algoritmos y Estructuras de Datos - UTN FRRe
+==============================================================================
+
+Fecha del diagnostico : 2026-11-06
+Archivos analizados   : main.c, simulador.c, utilidades.c, validaciones.c,
+                        simulador.h, utilidades.h, validaciones.h, Makefile
+Entorno de prueba     : Linux (Ubuntu 24.04), gcc 13.3.0, GNU make
+Metodo                : compilacion con el Makefile del proyecto (Debug y
+                        Release), ejecucion con AddressSanitizer + UBSan
+                        y pruebas manuales con entradas simuladas por stdin.
+
+------------------------------------------------------------------------------
+1. RESULTADO GENERAL DEL DIAGNOSTICO
+------------------------------------------------------------------------------
+El programa logro ejecutarse con exito. Compila sin warnings en modo
+Debug y Release, y no se detectaron errores de memoria ni algun comportamiento
+indefinido en ninguna de las pruebas realizadas.
+
+Limitaciones del diagnostico:
+ - Solo se realizo la prueba unicamente en Linux. No se probo en Windows ni macOS.
+ - Las pruebas fueron por entrada simulada ("stdin", es decir simulando los datos recibidos), no en una terminal
+   interactiva real.
+ - No se valido el balance/jugabilidad del modo juego, solo que cada camino
+   termine correctamente.
+
+------------------------------------------------------------------------------
+2. COMPILACION
+------------------------------------------------------------------------------
+Estructura requerida por el Makefile:
+
+    Makefile
+    include/   simulador.h  utilidades.h  validaciones.h
+    src/       main.c  simulador.c  utilidades.c  validaciones.c
+
+Comandos:
+
+    make                          -> Debug   (out/Debug/bin/simulador)
+    BUILD_TYPE=Release make       -> Release (out/Release/bin/simulador)
+    make clean
+
+Resultado:
+    Debug   : OK, 0 warnings
+    Release : OK, 0 warnings
+    Se requiere -lm (ya incluido en LDFLAGS) por fabs/isnan/NAN.
+
+------------------------------------------------------------------------------
+3. PRUEBAS REALIZADAS
+------------------------------------------------------------------------------
+3.1 Modo teorico (opcion 2), datos oficiales
+    Resultado obtenido            Valor esperado (calculo manual)
+    a) W_roz = -6.4117e+11 J      -6.4117e+11 J     COINCIDE
+    b) a = -27.44 m/s2 (2.80 g)   -27.44 m/s2       COINCIDE
+    c) F = 221866.67 N (2.18 P)   221866.67 N       COINCIDE
+    d) gamma = 6.20 -> trayectoria segura           CORRECTO
+
+3.2 Modo juego (opcion 1)
+    Caso                                         Resultado
+    -------------------------------------------  ----------------------------
+    gamma 6.2, "n" a 10 km, "s" a 2500 m         Amerizaje exitoso
+    gamma 3 (< 5.5)                              Fallo: rebote atmosferico
+    gamma 10 (> 7.0), dos turnos                 Fallo: escudo destruido
+    gamma 6.2, nunca abre paracaidas             Fallo: impacto sin paracaidas
+    gamma 6.2, "s" a 10 km (v = 715 m/s)         Paracaidas rasgados (-50%
+                                                 escudo); luego amerizaje OK
+
+3.3 Validacion de entradas
+    - Texto no numerico y valores fuera de rango: vuelve a preguntar.
+    - Linea de 300 caracteres: informa "demasiado larga" y continua.
+    - Coma decimal (500,5): aceptada y convertida correctamente.
+    - EOF (Ctrl+D / Ctrl+Z) en cualquier prompt: sale con codigo 1, sin
+      bucle infinito.
+
+3.4 Otras opciones del menu
+    - Reporte sin mision previa: muestra "Todavia no se simulo ninguna
+      mision."
+    - Manual (4) e Integrantes (5): se muestran correctamente.
+    - Salida (6): finaliza con codigo 0.
+
+3.5 Modos de compilacion
+    - Debug  : logs con archivo:linea:funcion.
+    - Release: logs sin metadatos de depuracion; mismos resultados.
+
+------------------------------------------------------------------------------
+4. OBSERVACIONES Y PUNTOS A MEJORAR
+------------------------------------------------------------------------------
+Ninguno impide el funcionamiento. Ordenados por relevancia.
+
+[1] Makefile: objetos compartidos entre Debug y Release
+    Los ".o" se generan en src/ sin importar el BUILD_TYPE y no dependen de los
+    ".h" (esto es observacion por lectura del codigo y no reproducida en pruebas).
+    Compilar Debug y luego Release sin "make clean" linkearia los objetos
+    viejos, y modificar un ".h" no dispara recompilacion.
+    Sugerencia: objetos en out/$(BUILD_TYPE)/obj/ y agregar -MMD -MP con
+    "-include $(OBJS:.o=.d)".
+
+[2] Modo juego: paracaidas rasgados no es fallo
+    Abrir los paracaidas a 10 km con velocidad > 120 m/s genera el evento
+    "Paracaidas rasgados" y resta 50% de escudo, pero se pueden volver a
+    abrir a 2500 m y la mision termina como exitosa. El estado
+    MISION_FALLO_PARACAIDAS existe en "simulador.h" pero no se usa.
+
+[3] Documentacion inconsistente
+    "simulador.h" indica que calcular_desaceleracion_media devuelve un "valor
+    escalar positivo", pero devuelve un valor negativo (ej. -27.44 m/s2),
+    como describe correctamente el comentario de "simulador.c".
+
+[4] Log con salto de linea
+    En leer_entero_rango y leer_real_rango, el LOG_WARNING de "sintaxis
+    invalida" imprime el buffer con su '\n' final y el mensaje se ve partido
+    en dos lineas. Quitar el '\n' antes de loguear.
+
+[5] Menores
+    - "##__VA_ARGS__" es extension de GCC/Clang: no compila con MSVC
+      (MinGW si).
+    - leer_entero() (validaciones.c) esta definida y declarada pero no se
+      usa en ningun lado.
+    - GAMMA_MIN/MAX y ANGULO_REINGRESO_MIN/MAX son equivalentes (alias en
+      simulador.h); se podria usar un solo nombre en todo el codigo.
+
+------------------------------------------------------------------------------
+5. CONCLUSION!!!
+------------------------------------------------------------------------------
+El simulador logra lo que se espera conseguir: los calculos fisicos correctos con
+su respectiva verificacion manual, validacion de entradas , todos los desenlaces/
+posibilidades del modo juego alcanzables y ademas, sin errores de memoria detectados.
+ Aun asi, el proyecto esta sujeto a cambios con el objetivo de ajilizarlo. 
+==============================================================================
