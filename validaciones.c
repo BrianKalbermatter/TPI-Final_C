@@ -61,7 +61,7 @@ int leer_entero(const char *mensaje, int min, int max)
 
     if(strchr(linea, '\n') == NULL && !feof(stdin)) {
       descartar_linea();
-      printf("Error: de la entrada es demasiado larga.\n");
+      printf("Error: la entrada es demasiado larga.\n");
       continue;
     }
 
