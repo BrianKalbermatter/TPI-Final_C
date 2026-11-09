@@ -187,6 +187,7 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 | Brian Kalbermatter | Claude Code | Validar el ingreso de enteros en `validaciones.c` y `validaciones.h` | Consulta sobre cómo verificar si una entrada es un entero y cómo armar `leer_entero` | Se probó con letras, línea vacía, `12abc`, `3.5`, valores fuera de rango, 200 dígitos y fin de entrada; se revisó y se documentó el recorrido de la función |
 | Brian Kalbermatter | Claude Code | Unir las ramas del equipo en una rama de integración, completar el ciclo de juego, el modo teórico y el reporte | Pedido de unificar todas las ramas según la consigna sin quitar lo escrito por el equipo | Se jugaron todos los finales, se probaron entradas erróneas y fin de entrada, y se compiló con `-Wall -Wextra` en Debug y Release |
 | Emiliano Elst | Gemini | Ciclo de simulación por turnos, historial en arreglos y reporte final (Ticket #5) | Solicitud de diseño de estado de la misión, bucle de turnos con condiciones de éxito/fracaso del Escenario 4 y reporte de desempeño | Verificación contra las fórmulas físicas del reingreso atmosférico y adaptación al código integrado del equipo |
+| Villalba Ciro | Claude Code | Testear el código y editar el video (Ticket #6) | Ayuda a editar los cortes bruscos del video | Revición del video una vez editado, consultando con los demas integrantes |
 
 ## Entregables
 
