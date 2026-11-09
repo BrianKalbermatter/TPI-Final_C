@@ -601,7 +601,7 @@ void simulador_mostrar_integrantes(void) {
   printf(" │ Brian Kalbermatter      │ @BrianKalbermatter        │\n");
   printf(" │ Emiliano Elst           │ @emilianoelst             │\n");
   printf(" │ Enzo Solis              │ @EnzoSolis                │\n");
-  printf(" │ Ezequiel (EzXdlol)      │ @EzXdlol                  │\n");
+  printf(" │ Jesus Miranda Arce      │ @EzXdlol                  │\n");
   printf(" │ Ciro Alejandro Villalba │ @Gravitated-ribbit-ribbit │\n");
   printf(" └─────────────────────────┴───────────────────────────┘\n");
 }
