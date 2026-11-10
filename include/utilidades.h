@@ -44,6 +44,12 @@ typedef enum {
 void log_set_min_level(LOG_LEVELS _nivel_min);
 
 /**
+ * @brief Devuelve el nivel mínimo de severidad configurado para los registros.
+ * @return Nivel mínimo actual (LOG_LEVEL_TRACE hasta LOG_LEVEL_SILENCE).
+ */
+LOG_LEVELS log_get_min_level(void);
+
+/**
  * @def LOG_DEBUG_MODE
  * @brief Indicador de modo depuración para el sistema de logs.
  * @details Activo (1) si DEBUG está definido o NDEBUG no está definido.

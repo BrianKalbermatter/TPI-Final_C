@@ -30,6 +30,9 @@ add_executable(simulador
   src/simulador.c
   src/utilidades.c
   src/validaciones.c
+  src/render.c
+  src/visualizacion.c
+  src/terminal_mcc.c
 )
 
 target_include_directories(simulador PRIVATE include)

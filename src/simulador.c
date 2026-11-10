@@ -14,6 +14,7 @@
 #include "simulador.h"
 #include "utilidades.h"
 #include "validaciones.h"
+#include "visualizacion.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -438,33 +439,52 @@ void simulador_ejecutar_modo_interactivo(MisionArtemis *mision) {
   ASSERT(mision != NULL, "Puntero a MisionArtemis no puede ser nulo en modo interactivo");
   LOG_DEBUG("[ORION-OBC] Módulo de vuelo interactivo activado. Esperando comandos de guiado.");
 
-  printf("╔══════════════════════════════════════════════════════════════════════╗\n");
-  printf("║        MISIÓN ARTEMIS: RETORNO DE LA CÁPSULA ORION (MODO JUEGO)      ║\n");
-  printf("╚══════════════════════════════════════════════════════════════════════╝\n\n");
-
   simulador_inicializar(mision);
-  printf("Objetivo: mantener gamma en la ventana segura de %.1f a %.1f grados y abrir\n",
-         ANGULO_REINGRESO_MIN, ANGULO_REINGRESO_MAX);
-  printf("los paracaidas recien a %.0f m.\n", ALTITUD_PARACAIDAS_M);
+
+  // Centro de control grafico (pantalla completa); si la terminal no lo soporta, modo texto.
+  int grafico = visualizacion_iniciar(mision);
+
+  if (!grafico) {
+    printf("╔══════════════════════════════════════════════════════════════════════╗\n");
+    printf("║        MISIÓN ARTEMIS: RETORNO DE LA CÁPSULA ORION (MODO JUEGO)      ║\n");
+    printf("╚══════════════════════════════════════════════════════════════════════╝\n\n");
+    printf("Objetivo: mantener gamma en la ventana segura de %.1f a %.1f grados y abrir\n",
+           ANGULO_REINGRESO_MIN, ANGULO_REINGRESO_MAX);
+    printf("los paracaidas recien a %.0f m.\n", ALTITUD_PARACAIDAS_M);
+  }
 
   while (mision->resultado == MISION_EN_CURSO) {
     double angulo = mision->angulo_reingreso;
     int accion_paracaidas = 0;
 
-    printf("\n--- Turno %d | Altitud: %.0f m | Velocidad: %.1f m/s | Escudo: %.0f%% ---\n",
-           mision->total_puntos + 1, mision->altitud, mision->velocidad, mision->integridad_escudo);
+    if (!grafico) {
+      printf("\n--- Turno %d | Altitud: %.0f m | Velocidad: %.1f m/s | Escudo: %.0f%% ---\n",
+             mision->total_puntos + 1, mision->altitud, mision->velocidad, mision->integridad_escudo);
+    }
 
     if (mision->altitud > ALTITUD_FRENADO_M) {
-      angulo = leer_real_rango("Angulo gamma en grados (0.1 a 89.9): ", 0.1, 89.9);
+      const char *pregunta = "Angulo gamma en grados (0.1 a 89.9): ";
+      angulo = grafico ? visualizacion_leer_real(pregunta, 0.1, 89.9) : leer_real_rango(pregunta, 0.1, 89.9);
     } else {
-      accion_paracaidas = leer_confirmacion("Desplegar paracaidas? (S/N): ");
+      const char *pregunta = "Desplegar paracaidas? (S/N): ";
+      accion_paracaidas = grafico ? visualizacion_leer_confirmacion(pregunta) : leer_confirmacion(pregunta);
     }
 
     actualizar_estado_turno(mision, angulo, accion_paracaidas, DT_TURNO_S);
-    printf("Evento: %s\n", mision->historial[mision->total_puntos - 1].evento);
+
+    if (grafico) {
+      visualizacion_animar_turno();
+    } else {
+      printf("Evento: %s\n", mision->historial[mision->total_puntos - 1].evento);
+    }
   }
 
-  printf("\n");
+  if (grafico) {
+    visualizacion_finalizar();
+    limpiar_pantalla();
+  } else {
+    printf("\n");
+  }
   simulador_mostrar_reporte(mision);
 }
 

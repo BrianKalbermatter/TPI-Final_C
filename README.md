@@ -68,6 +68,9 @@ Un Pull Request se integra a `main` solo si cumple **todos** estos puntos.
 | `simulador.h` | Constantes, `struct`, `typedef` y prototipos públicos |
 | `simulador.c` | Algoritmos de simulación, estado del juego, cálculos físicos y lógica de negocio |
 | `validaciones.c` / `validaciones.h` | Ingreso seguro de enteros, flotantes y caracteres, y mensajes de advertencia |
+| `render.c` / `render.h` | Mini motor de render ASCII en pantalla completa: lienzo de celdas, rampa de brillo, color de 24 bits y cuadros sin parpadeo |
+| `visualizacion.c` / `visualizacion.h` | Centro de control: vista animada del reingreso (cielo, océano, estela, plasma, paracaídas y HUD) que se juega en vivo turno a turno |
+| `terminal_mcc.c` / `terminal_mcc.h` | Consola del Centro de Control de Misión dentro de la pantalla: historial de mensajes y línea de comandos del operador |
 | `Makefile` | Compilación del proyecto |
 
 ## Escenario Artemis
