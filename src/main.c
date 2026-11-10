@@ -1,9 +1,10 @@
 #include <simulador.h>
 #include <utilidades.h>
 #include <validaciones.h>
-#include <stdio.h>
+//#include <stdio.h>
+#include <tui.h>
 
-static void mostrar_banner_bienvenida(void) {
+/*
   printf("╔══════════════════════════════════════════════════════════════════════╗\n");
   printf("║         SIMULADOR DE MISIONES ARTEMIS - SITUACIÓN 4                  ║\n");
   printf("║      Reingreso Atmosférico, Frenado Aerodinámico y Amerizaje         ║\n");
@@ -20,6 +21,7 @@ static void mostrar_menu_principal(void) {
   printf("5. Integrantes del Equipo de Desarrollo\n");
   printf("6. Salir del Programa\n\n");
 }
+*/
 
 int main(void) {
   activar_utf8();
@@ -28,6 +30,12 @@ int main(void) {
   MisionArtemis mision_actual;
   simulador_inicializar(&mision_actual);
 
+  tui_iniciar();
+  const int ret = menu_principal();
+  tui_liberar();
+
+  return ret;
+  /*
   int opcion = 0;
 
   do {
@@ -99,5 +107,7 @@ int main(void) {
   } while (opcion != 6);
 
   LOG_INFO("[SISTEMA] Terminal desconectada. Operacion concluida con exito.");
+
   return 0;
+  */
 }
