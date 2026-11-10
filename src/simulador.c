@@ -14,6 +14,11 @@
 #include "simulador.h"
 #include "utilidades.h"
 #include "validaciones.h"
+#include "tui.h"
+#ifdef MOUSE_MOVED
+#undef MOUSE_MOVED
+#endif
+#include <curses.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -201,26 +206,26 @@ void analizarAnguloReingreso(double gamma)
 {
     /* Un angulo de entrada solo tiene sentido entre 0 (exclusivo) y 90 grados. */
     if (isnan(gamma) || gamma <= 0.0 || gamma > 90.0) {
-        fprintf(stderr, "Error: el angulo de reingreso debe estar en (0, 90] grados.\n");
+        LOG_ERROR("Error: el angulo de reingreso debe estar en (0, 90] grados.");
         return;
     }
 
-    printf("Angulo de reingreso: %.2f grados\n", gamma);
+    printw("Angulo de reingreso: %.2f grados\n", gamma);
 
     if (gamma > GAMMA_MAX) {
-        printf("  Angulo demasiado pronunciado:\n");
-        printf("   - desaceleracion excesiva\n");
-        printf("   - calentamiento extremo\n");
-        printf("   - riesgo estructural\n");
-        printf("   - peligro para la tripulacion\n");
+        printw("  Angulo demasiado pronunciado:\n");
+        printw("   - desaceleracion excesiva\n");
+        printw("   - calentamiento extremo\n");
+        printw("   - riesgo estructural\n");
+        printw("   - peligro para la tripulacion\n");
     } else if (gamma < GAMMA_MIN) {
-        printf("  Angulo demasiado superficial:\n");
-        printf("   - rebote atmosferico\n");
-        printf("   - perdida de frenado\n");
-        printf("   - posible retorno al espacio\n");
-        printf("   - desviacion de la zona de amerizaje\n");
+        printw("  Angulo demasiado superficial:\n");
+        printw("   - rebote atmosferico\n");
+        printw("   - perdida de frenado\n");
+        printw("   - posible retorno al espacio\n");
+        printw("   - desviacion de la zona de amerizaje\n");
     } else {
-        printf("  Trayectoria segura\n");
+        printw("  Trayectoria segura\n");
     }
 }
 
@@ -436,172 +441,27 @@ void actualizar_estado_turno(MisionArtemis *mision, double angulo, int accion_pa
 
 void simulador_ejecutar_modo_interactivo(MisionArtemis *mision) {
   ASSERT(mision != NULL, "Puntero a MisionArtemis no puede ser nulo en modo interactivo");
-  LOG_DEBUG("[ORION-OBC] Módulo de vuelo interactivo activado. Esperando comandos de guiado.");
-
-  printf("╔══════════════════════════════════════════════════════════════════════╗\n");
-  printf("║        MISIÓN ARTEMIS: RETORNO DE LA CÁPSULA ORION (MODO JUEGO)      ║\n");
-  printf("╚══════════════════════════════════════════════════════════════════════╝\n\n");
-
-  simulador_inicializar(mision);
-  printf("Objetivo: mantener gamma en la ventana segura de %.1f a %.1f grados y abrir\n",
-         ANGULO_REINGRESO_MIN, ANGULO_REINGRESO_MAX);
-  printf("los paracaidas recien a %.0f m.\n", ALTITUD_PARACAIDAS_M);
-
-  while (mision->resultado == MISION_EN_CURSO) {
-    double angulo = mision->angulo_reingreso;
-    int accion_paracaidas = 0;
-
-    printf("\n--- Turno %d | Altitud: %.0f m | Velocidad: %.1f m/s | Escudo: %.0f%% ---\n",
-           mision->total_puntos + 1, mision->altitud, mision->velocidad, mision->integridad_escudo);
-
-    if (mision->altitud > ALTITUD_FRENADO_M) {
-      angulo = leer_real_rango("Angulo gamma en grados (0.1 a 89.9): ", 0.1, 89.9);
-    } else {
-      accion_paracaidas = leer_confirmacion("Desplegar paracaidas? (S/N): ");
-    }
-
-    actualizar_estado_turno(mision, angulo, accion_paracaidas, DT_TURNO_S);
-    printf("Evento: %s\n", mision->historial[mision->total_puntos - 1].evento);
-  }
-
-  printf("\n");
-  simulador_mostrar_reporte(mision);
-}
-
-static void cargar_datos_oficiales(DatosEscenario *datos) {
-  datos->masa = MASA_ORION_KG;
-  datos->vi = VELOCIDAD_REINGRESO_MS;
-  datos->vf = VELOCIDAD_PARACAIDAS_MS;
-  datos->hi = ALTITUD_REINGRESO_M;
-  datos->hf = ALTITUD_PARACAIDAS_M;
-  datos->delta_t = DELTA_T_DESACELERACION_S;
-  datos->v_impacto = VELOCIDAD_AMERIZAJE_MS;
-  datos->distancia_frenado = DISTANCIA_HUNDIMIENTO_M;
-  datos->gamma = 6.2;
-}
-
-static void cargar_datos_usuario(DatosEscenario *datos) {
-  datos->masa = leer_real_rango("Masa de la nave en kg (1 a 100000): ", 1.0, 100000.0);
-  datos->vi = leer_real_rango("Velocidad inicial en m/s (1 a 20000): ", 1.0, 20000.0);
-  datos->vf = leer_real_rango("Velocidad final en m/s (0 a velocidad inicial): ", 0.0, datos->vi);
-  datos->hi = leer_real_rango("Altitud inicial en m (1 a 200000): ", 1.0, 200000.0);
-  datos->hf = leer_real_rango("Altitud final en m (0 a menos que la inicial): ", 0.0, datos->hi - 0.5);
-  datos->delta_t = leer_real_rango("Tiempo de desaceleracion en s (0.1 a 10000): ", 0.1, 10000.0);
-  datos->v_impacto = leer_real_rango("Velocidad de impacto en m/s (0 a 1000): ", 0.0, 1000.0);
-  datos->distancia_frenado = leer_real_rango("Distancia de frenado en m (0.01 a 100): ", 0.01, 100.0);
-  datos->gamma = leer_real_rango("Angulo gamma en grados (0.1 a 89.9): ", 0.1, 89.9);
+  LOG_DEBUG("[ORION-OBC] Módulo de vuelo interactivo activado en curses.");
+  tui_simulacion_interactiva(mision);
 }
 
 void simulador_ejecutar_modo_teorico(void) {
-  LOG_DEBUG("[FIDO] Módulo de análisis físico y cálculo analítico activado.");
-
-  printf("╔══════════════════════════════════════════════════════════════════════╗\n");
-  printf("║     ANÁLISIS TEÓRICO Y PREGUNTAS ANALÍTICAS - SITUACIÓN ARTEMIS 4    ║\n");
-  printf("╚══════════════════════════════════════════════════════════════════════╝\n\n");
-
-  DatosEscenario datos;
-  ResultadoArtemis resultado;
-
-  if (leer_confirmacion("Usar los datos oficiales de la mision? (S/N): ")) {
-    cargar_datos_oficiales(&datos);
-  } else {
-    cargar_datos_usuario(&datos);
-  }
-
-  resolverEscenarioArtemis(&resultado, datos.masa, datos.vi, datos.vf, datos.hi, datos.hf,
-                           datos.delta_t, datos.v_impacto, datos.distancia_frenado);
-
-  printf("\na) Trabajo de rozamiento: W_roz = %.4e J\n", resultado.trabajoRozamiento);
-  printf("b) Desaceleracion media: %.2f m/s2 (%.2f g)\n", resultado.desaceleracion, resultado.factorG);
-  printf("c) Fuerza del agua: %.2f N (%.2f veces el peso)\n", resultado.fuerzaAmerizaje, resultado.multiploPeso);
-  printf("d) ");
-  analizarAnguloReingreso(datos.gamma);
-}
-
-static const char *nombre_fase(FaseVuelo fase) {
-  switch (fase) {
-    case FASE_ENTRADA_ATMOSFERICA: return "Entrada";
-    case FASE_FRENADO_HIPERSONICO: return "Frenado";
-    case FASE_PARACAIDAS:          return "Paracaidas";
-    case FASE_AMERIZAJE:           return "Amerizaje";
-    case FASE_FINALIZADA:          return "Finalizada";
-  }
-  return "Desconocida";
+  LOG_DEBUG("[FIDO] Módulo de análisis físico y cálculo analítico activado en curses.");
+  tui_analisis_teorico();
 }
 
 void simulador_mostrar_reporte(const MisionArtemis *mision) {
   ASSERT(mision != NULL, "Puntero a MisionArtemis no puede ser nulo al mostrar reporte");
-  LOG_DEBUG("[TELEMETRÍA] Descarga de registros de caja negra (VDR) completada.");
-
-  printf("╔══════════════════════════════════════════════════════════════════════╗\n");
-  printf("║                REPORTE FINAL DE TELEMETRÍA DE LA MISIÓN              ║\n");
-  printf("╚══════════════════════════════════════════════════════════════════════╝\n\n");
-
-  if (mision->total_puntos == 0) {
-    printf("Todavia no se simulo ninguna mision.\n");
-    return;
-  }
-
-  printf("%-5s %-7s %-10s %-9s %-7s %-6s %-11s %s\n",
-         "Turno", "t (s)", "Altura (m)", "v (m/s)", "Gamma", "G", "Fase", "Evento");
-  for (int i = 0; i < mision->total_puntos; i++) {
-    const PuntoTelemetria *punto = &mision->historial[i];
-    printf("%-5d %-7.0f %-10.0f %-9.1f %-7.2f %-6.2f %-11s %s\n",
-           i + 1, punto->tiempo, punto->altitud, punto->velocidad, punto->angulo_gamma,
-           punto->aceleracion_g, nombre_fase(punto->fase), punto->evento);
-  }
-
-  const PuntoTelemetria *ultimo = &mision->historial[mision->total_puntos - 1];
-
-  printf("\nTiempo de vuelo: %.0f s\n", ultimo->tiempo);
-  printf("Trabajo de rozamiento acumulado: %.4e J\n", mision->trabajo_rozamiento);
-  printf("Desaceleracion media: %.2f m/s2 | Carga maxima: %.2f g\n", fabs(mision->desaceleracion_media), mision->desaceleracion_max_g);
-  printf("Integridad final del escudo: %.0f%%\n", mision->integridad_escudo);
-  if (mision->altitud <= 0.0) {
-    printf("Fuerza del agua: %.2f N (%.2f veces el peso)\n",
-           mision->fuerza_impacto_n, mision->fuerza_impacto_multiplo_peso);
-  }
-  printf("\nVeredicto: %s\n", mision->causa_fallo);
+  LOG_DEBUG("[TELEMETRÍA] Descarga de registros de caja negra (VDR) en curses.");
+  tui_reporte_telemetria(mision);
 }
 
 void simulador_mostrar_manual(void) {
-  LOG_DEBUG("[MANUAL] Visualización de especificaciones técnicas y fundamentos físicos.");
-
-  printf("╔══════════════════════════════════════════════════════════════════════╗\n");
-  printf("║              MANUAL DE OPERACIONES Y FÍSICA DE REINGRESO             ║\n");
-  printf("╚══════════════════════════════════════════════════════════════════════╝\n\n");
-  printf("1. CONSERVACIÓN Y TEOREMA DE TRABAJO Y ENERGÍA:\n");
-  printf("   Delta E_m = W_fuerzas_no_conservativas = W_roz\n");
-  printf("   E_m = (1/2) * m * v^2 + m * g * h\n\n");
-  printf("2. DESACELERACIÓN MEDIA Y CARGAS G:\n");
-  printf("   a_med = (v_f - v_i) / delta_t\n");
-  printf("   Carga G = |a_med| / 9.80 m/s^2\n\n");
-  printf("3. IMPACTO EN EL AGUA (AMERIZAJE):\n");
-  printf("   W_frenado = Delta K => -F_prom * d = 0 - (1/2) * m * v_impacto^2\n");
-  printf("   F_prom = (m * v_impacto^2) / (2 * d)\n\n");
-  printf("4. VENTANA DE REINGRESO:\n");
-  printf("   5.5 deg <= gamma <= 7.0 deg\n");
-  printf("   - gamma < 5.5 deg: Rebote en la atmosfera (perdida en el espacio)\n");
-  printf("   - gamma > 7.0 deg: Reingreso escarpado (destruccion termica y sobrecarga de Gs)\n");
+  LOG_DEBUG("[MANUAL] Visualización de especificaciones técnicas en curses.");
+  tui_manual_vuelo();
 }
 
 void simulador_mostrar_integrantes(void) {
-  LOG_DEBUG("[DIRECTOR DE VUELO] Consola de personal de soporte y desarrollo en pantalla.");
-
-  printf("╔══════════════════════════════════════════════════════════════════════╗\n");
-  printf("║               INTEGRANTES DEL EQUIPO DE DESARROLLO                   ║\n");
-  printf("╚══════════════════════════════════════════════════════════════════════╝\n\n");
-  printf(" Institucion: Universidad Tecnologica Nacional (UTN FRRe)\n");
-  printf(" Asignatura:  Algoritmos y Estructuras de Datos\n");
-  printf(" Carrera:     Ingenieria en Sistemas de Informacion\n");
-  printf(" Proyecto:    Simulador de Misiones Artemis - Situacion 4\n\n");
-  printf(" ┌─────────────────────────┬───────────────────────────┐\n");
-  printf(" │ Integrante              │ Usuario GitHub            │\n");
-  printf(" ├─────────────────────────┼───────────────────────────┤\n");
-  printf(" │ Brian Kalbermatter      │ @BrianKalbermatter        │\n");
-  printf(" │ Emiliano Elst           │ @emilianoelst             │\n");
-  printf(" │ Enzo Solis              │ @EnzoSolis                │\n");
-  printf(" │ Jesus Miranda Arce      │ @EzXdlol                  │\n");
-  printf(" │ Ciro Alejandro Villalba │ @Gravitated-ribbit-ribbit │\n");
-  printf(" └─────────────────────────┴───────────────────────────┘\n");
+  LOG_DEBUG("[DIRECTOR DE VUELO] Consola de personal de desarrollo en curses.");
+  tui_integrantes();
 }
