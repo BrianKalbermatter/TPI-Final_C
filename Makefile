@@ -33,7 +33,7 @@ else
 	CFLAGS += -g -O0 -DDEBUG
 endif
 
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/simulador.c $(SRC_DIR)/utilidades.c $(SRC_DIR)/validaciones.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/simulador.c $(SRC_DIR)/utilidades.c $(SRC_DIR)/validaciones.c $(SRC_DIR)/render.c $(SRC_DIR)/visualizacion.c $(SRC_DIR)/terminal_mcc.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)

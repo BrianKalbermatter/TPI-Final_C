@@ -68,6 +68,9 @@ Un Pull Request se integra a `main` solo si cumple **todos** estos puntos.
 | `simulador.h` | Constantes, `struct`, `typedef` y prototipos públicos |
 | `simulador.c` | Algoritmos de simulación, estado del juego, cálculos físicos y lógica de negocio |
 | `validaciones.c` / `validaciones.h` | Ingreso seguro de enteros, flotantes y caracteres, y mensajes de advertencia |
+| `render.c` / `render.h` | Mini motor de render ASCII en pantalla completa: lienzo de celdas, rampa de brillo, color de 24 bits y cuadros sin parpadeo |
+| `visualizacion.c` / `visualizacion.h` | Centro de control: vista animada del reingreso (cielo, océano, estela, plasma, paracaídas y HUD) que se juega en vivo turno a turno |
+| `terminal_mcc.c` / `terminal_mcc.h` | Consola del Centro de Control de Misión dentro de la pantalla: historial de mensajes y línea de comandos del operador |
 | `Makefile` | Compilación del proyecto |
 
 ## Escenario Artemis
@@ -188,6 +191,7 @@ Registro obligatorio. Cada integrante agrega una fila por cada uso relevante.
 | Brian Kalbermatter | Claude Code | Unir las ramas del equipo en una rama de integración, completar el ciclo de juego, el modo teórico y el reporte | Pedido de unificar todas las ramas según la consigna sin quitar lo escrito por el equipo | Se jugaron todos los finales, se probaron entradas erróneas y fin de entrada, y se compiló con `-Wall -Wextra` en Debug y Release |
 | Emiliano Elst | Gemini | Ciclo de simulación por turnos, historial en arreglos y reporte final (Ticket #5) | Solicitud de diseño de estado de la misión, bucle de turnos con condiciones de éxito/fracaso del Escenario 4 y reporte de desempeño | Verificación contra las fórmulas físicas del reingreso atmosférico y adaptación al código integrado del equipo |
 | Ciro Alejandro Villalba | Claude Code | Controlar y editar el video | Pedido de corregir la discontinuidad brusca en algunas partes del video | Revisión del video |
+| Brian Kalbermatter | Claude Code | Interfaz de consola del Centro de Control: motor de render ASCII (`render.c`), vista animada del reingreso (`visualizacion.c`) y terminal del operador (`terminal_mcc.c`) (Ticket #14) | Pedido de mostrar en consola el recorrido de la nave Orion con una vista animada del reingreso y una terminal del Centro de Control donde se ingresan los comandos de cada turno | Se jugó la simulación completa en la vista animada, se probó que con una terminal menor a 100×30 o sin colores se use el modo texto anterior, y se revisó cada archivo nuevo para poder explicar su funcionamiento |
 
 ## Entregables
 

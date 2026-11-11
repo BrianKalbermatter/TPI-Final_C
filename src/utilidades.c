@@ -121,6 +121,10 @@ void log_set_min_level(LOG_LEVELS _nivel_min) {
   }
 }
 
+LOG_LEVELS log_get_min_level(void) {
+  return nivel_min;
+}
+
 #ifdef _WIN32
 void limpiar_consola(void) {
   system("cls");
